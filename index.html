@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 50px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+        #weather-container {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+            backdrop-filter: blur(10px);
+        }
+        input, button {
+            padding: 12px;
+            margin: 10px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+        }
+        input {
+            width: 250px;
+            display: block;
+            margin: 0 auto 10px auto;
+            text-align: center;
+        }
+        button {
+            background: #ff7eb3;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #ff4d79;
+        }
+        .weather-icon {
+            width: 80px;
+            height: 80px;
+        }
+        h1 {
+            font-size: 32px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        #weather-container h2 {
+            font-size: 28px;
+        }
+        #weather-container p {
+            font-size: 20px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <input type="text" id="location" placeholder="Enter location">
+    <button onclick="getWeather()">Get Weather</button>
+    
+    <div id="weather-container" style="display: none;">
+        <h2 id="city"></h2>
+        <img id="weather-icon" class="weather-icon" src="" alt="Weather icon">
+        <p>Temperature: <span id="temperature"></span>°C</p>
+        <p>Condition: <span id="condition"></span></p>
+    </div>
+    
+    <script>
+        async function getWeather() {
+            const location = document.getElementById('location').value;
+            if (!location) {
+                alert('Please enter a location');
+                return;
+            }
+            const apiKey = '065d3604ef694913ae2124902250202';
+            const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                document.getElementById('city').innerText = data.location.name;
+                document.getElementById('temperature').innerText = data.current.temp_c;
+                document.getElementById('condition').innerText = data.current.condition.text;
+                document.getElementById('weather-icon').src = data.current.condition.icon;
+                document.getElementById('weather-container').style.display = 'block';
+            } catch (error) {
+                alert('Failed to fetch weather data. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
